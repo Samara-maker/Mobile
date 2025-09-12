@@ -1,20 +1,13 @@
-import { StatusBar } from 'expo-status-bar';
+import React, { useState } from "react";
 import { StyleSheet, Text, View } from 'react-native';
+import TextInputComponent from "./components/TextInputComponent";
+import FlatListComponent from "./components/FlatListComponent.js";
 
-export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
-}
+const addTask = () => {
+  if (taskText.trim().length === 0) return;
+  setTasks([...tasks, { id: Date.now().toString(), text: taskText, done: false }]);
+  setTaskText("");
+};
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+
+
