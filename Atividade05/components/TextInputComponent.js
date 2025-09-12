@@ -14,8 +14,12 @@ export default function TextInputComponent({ value, onChangeText, placeholder })
 
 const styles = StyleSheet.create({
   input: {
-    borderWidth: 1,
-    borderColor: "#c71414ff",
-    borderRadius: 5,
+    height: 40,
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderRadius: 8,
+    backgroundColor: "white",
+    shadowRadius: 2,
+    elevation: 2,
   },
 });
