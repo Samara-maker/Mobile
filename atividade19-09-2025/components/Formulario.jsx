@@ -66,13 +66,15 @@ export default function Formulario() {
   const validateForm = () => {
     let isValid = true;
 
-    // Nome completo
+    // NOME COMPLLETO, CONFERE SE TEM PELO MENOS DUAS PALAVRAS
+
     if (!nome.trim() || nome.split(' ').length < 2) {
       setNomeError("Nome completo é obrigatório e deve conter pelo menos dois nomes.");
       isValid = false;
     } else setNomeError('');
 
-    // Data de nascimento
+    // ESSA DATA DE NASCCIMENTO VERIFICA SE ESTÁ NO FORMATO CORRETO E CALCULA A IDADE DO USUARIO, PARA VERIFICAR SE O MESMO É MENOR DE 18 ANOS
+
     const dataRegex = /^\d{2}\/\d{2}\/\d{4}$/;
     if (!dataRegex.test(data)) {
       setDataError("Data de nascimento inválida. Use o formato DD/MM/AAAA.");
@@ -84,13 +86,15 @@ export default function Formulario() {
       else setIsMenorDeIdade(false);
     }
 
-    // CPF
+    // CPF, ESTÁ CHAMANDO A FUNÇÃO 
+
     if (!validarCPF(cpf)) {
       setCpfError("CPF inválido.");
       isValid = false;
     } else setCpfError('');
 
     // Telefone Fixo
+
     const telefoneFixoRegex = /^\(\d{2}\) \d{4}-\d{4}$/;
     if (!telefoneFixoRegex.test(telefoneFixo)) {
       setTelefoneFixoError("Telefone fixo inválido. Use o formato (XX) XXXX-XXXX.");
@@ -143,6 +147,8 @@ export default function Formulario() {
       setNome(''); setData(''); setCpf(''); setTelefoneFixo('');
       setCelular(''); setEmail(''); setSenha(''); setConfirmarSenha('');
       setNomePai(''); setNomeMae(''); setIsMenorDeIdade(false);
+
+      // CASO DÊ ALGO DE ERRADO, ESSA ALERTA É DISPARADO
     } else {
       Alert.alert("Erro", "Verifique os campos e tente novamente.");
     }
