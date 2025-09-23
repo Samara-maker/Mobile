@@ -1,3 +1,6 @@
+//ESSA PARTE SÃO AS IMPORTAÇÕES
+//servem para criar o componente e guardar informações que o usuário digita.
+
 import React, { useState } from "react";
 import { Text, View, TextInput, TouchableOpacity, Alert } from "react-native";
 import { globalStyles } from '../styles/globalStyles';
@@ -5,6 +8,8 @@ import { ScrollView } from 'react-native';
 
 
 export default function Formulario() {
+  //CADA USESTATE GUARDA O QUE O USUARIO DIGITA
+
   const [nome, setNome] = useState('');
   const [data, setData] = useState('');
   const [cpf, setCpf] = useState('');
@@ -26,16 +31,22 @@ export default function Formulario() {
   const [senhaError, setSenhaError] = useState('');
   const [confirmarSenhaError, setConfirmarSenhaError] = useState('');
 
-  // Função para validar CPF
+  // Função para validar CPF CODIGO DISPONIBILIZADO PELO PROFESSOR
+
   const validarCPF = (cpf) => {
     cpf = cpf.replace(/[^\d]+/g,'');
     if (cpf === '') return false;
     if (cpf.length !== 11 ||
-      cpf === "00000000000" || cpf === "11111111111" ||
-      cpf === "22222222222" || cpf === "33333333333" ||
-      cpf === "44444444444" || cpf === "55555555555" ||
-      cpf === "66666666666" || cpf === "77777777777" ||
-      cpf === "88888888888" || cpf === "99999999999") return false;
+      cpf === "00000000000",
+      cpf === "11111111111",
+      cpf === "22222222222", 
+      cpf === "33333333333",
+      cpf === "44444444444", 
+      cpf === "55555555555",
+      cpf === "66666666666",
+      cpf === "77777777777",
+      cpf === "88888888888",
+      cpf === "99999999999") return false;
 
     let add = 0;
     for (let i = 0; i < 9; i++) add += parseInt(cpf.charAt(i)) * (10 - i);
