@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { Text, View, TextInput, TouchableOpacity, Alert } from "react-native";
 import { globalStyles } from '../styles/globalStyles';
+import { ScrollView } from 'react-native';
+
 
 export default function Formulario() {
   const [nome, setNome] = useState('');
@@ -24,19 +26,42 @@ export default function Formulario() {
   const [senhaError, setSenhaError] = useState('');
   const [confirmarSenhaError, setConfirmarSenhaError] = useState('');
 
-  // Função para validar o formulário
+  // Função para validar CPF
+  const validarCPF = (cpf) => {
+    cpf = cpf.replace(/[^\d]+/g,'');
+    if (cpf === '') return false;
+    if (cpf.length !== 11 ||
+      cpf === "00000000000" || cpf === "11111111111" ||
+      cpf === "22222222222" || cpf === "33333333333" ||
+      cpf === "44444444444" || cpf === "55555555555" ||
+      cpf === "66666666666" || cpf === "77777777777" ||
+      cpf === "88888888888" || cpf === "99999999999") return false;
+
+    let add = 0;
+    for (let i = 0; i < 9; i++) add += parseInt(cpf.charAt(i)) * (10 - i);
+    let rev = 11 - (add % 11);
+    if (rev === 10 || rev === 11) rev = 0;
+    if (rev !== parseInt(cpf.charAt(9))) return false;
+
+    add = 0;
+    for (let i = 0; i < 10; i++) add += parseInt(cpf.charAt(i)) * (11 - i);
+    rev = 11 - (add % 11);
+    if (rev === 10 || rev === 11) rev = 0;
+    if (rev !== parseInt(cpf.charAt(10))) return false;
+
+    return true;
+  };
+
   const validateForm = () => {
     let isValid = true;
 
-    
+    // Nome completo
     if (!nome.trim() || nome.split(' ').length < 2) {
       setNomeError("Nome completo é obrigatório e deve conter pelo menos dois nomes.");
       isValid = false;
-    } else {
-      setNomeError('');
-    }
+    } else setNomeError('');
 
-    // Validação de Data de Nascimento
+    // Data de nascimento
     const dataRegex = /^\d{2}\/\d{2}\/\d{4}$/;
     if (!dataRegex.test(data)) {
       setDataError("Data de nascimento inválida. Use o formato DD/MM/AAAA.");
@@ -44,105 +69,83 @@ export default function Formulario() {
     } else {
       setDataError('');
       const idade = new Date().getFullYear() - new Date(data.split('/').reverse().join('-')).getFullYear();
-      if (idade < 18) {
-        setIsMenorDeIdade(true);
-      } else {
-        setIsMenorDeIdade(false);
-      }
+      if (idade < 18) setIsMenorDeIdade(true);
+      else setIsMenorDeIdade(false);
     }
 
-    // Validação de CPF
-
-    const cpfRegex = /^\d{3}\.\d{3}\.\d{3}-\d{2}$/;
-    if (!cpfRegex.test(cpf)) {
-      setCpfError("CPF inválido. Use o formato XXX.XXX.XXX-XX.");
+    // CPF
+    if (!validarCPF(cpf)) {
+      setCpfError("CPF inválido.");
       isValid = false;
-    } else {
-      setCpfError('');
-    }
+    } else setCpfError('');
 
-    // Validação de Telefone Fixo
+    // Telefone Fixo
     const telefoneFixoRegex = /^\(\d{2}\) \d{4}-\d{4}$/;
     if (!telefoneFixoRegex.test(telefoneFixo)) {
       setTelefoneFixoError("Telefone fixo inválido. Use o formato (XX) XXXX-XXXX.");
       isValid = false;
-    } else {
-      setTelefoneFixoError('');
-    }
+    } else setTelefoneFixoError('');
 
-    // Validação de Celular
-    const celularRegex = /^\(\d{2}\) \d{9}-\d{4}$/;
+    // Celular
+    const celularRegex = /^\(\d{2}\) 9\d{4}-\d{4}$/;
     if (!celularRegex.test(celular)) {
-      setCelularError("Celular inválido. Use o formato (XX) XXXXX-XXXX.");
+      setCelularError("Celular inválido. Use o formato (XX) 9XXXX-XXXX.");
       isValid = false;
-    } else {
-      setCelularError('');
-    }
+    } else setCelularError('');
 
-    // Validação de Email
+    // Email
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     if (!emailRegex.test(email)) {
       setEmailError("Email inválido.");
       isValid = false;
-    } else {
-      setEmailError('');
-    }
+    } else setEmailError('');
 
-    // Validação de Senha
+    // Senha
     const senhaRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
     if (!senhaRegex.test(senha)) {
       setSenhaError("Senha deve ter no mínimo 8 caracteres, incluindo letras maiúsculas, minúsculas, números e caracteres especiais.");
       isValid = false;
-    } else {
-      setSenhaError('');
-    }
+    } else setSenhaError('');
 
-    // Validação de Confirmar Senha
+    // Confirmar senha
     if (senha !== confirmarSenha) {
       setConfirmarSenhaError("As senhas não coincidem.");
       isValid = false;
-    } else {
-      setConfirmarSenhaError('');
-    }
+    } else setConfirmarSenhaError('');
 
-    // Validação dos campos de pais para menores de idade
-    if (isMenorDeIdade) {
-      if (!nomePai.trim() || !nomeMae.trim()) {
-        Alert.alert("Erro", "É necessário preencher o nome do pai e da mãe.");
-        isValid = false;
-      }
+    // Campos para menores de idade
+    if (isMenorDeIdade && (!nomePai.trim() || !nomeMae.trim())) {
+      Alert.alert("Erro", "É necessário preencher o nome do pai e da mãe.");
+      isValid = false;
     }
 
     return isValid;
   };
 
-  // Função de envio do formulário
   const handleSubmit = () => {
     if (validateForm()) {
       const dados = { nome, data, cpf, telefoneFixo, celular, email, senha };
-      console.log("Dados do formulário válidos", dados);
+      console.log("Dados válidos:", dados);
       Alert.alert("Sucesso!", "Formulário enviado com sucesso.");
-      setNome('');
-      setData('');
-      setCpf('');
-      setTelefoneFixo('');
-      setCelular('');
-      setEmail('');
-      setSenha('');
-      setConfirmarSenha('');
-      setNomePai('');
-      setNomeMae('');
+
+      // Resetar campos
+      setNome(''); setData(''); setCpf(''); setTelefoneFixo('');
+      setCelular(''); setEmail(''); setSenha(''); setConfirmarSenha('');
+      setNomePai(''); setNomeMae(''); setIsMenorDeIdade(false);
     } else {
       Alert.alert("Erro", "Verifique os campos e tente novamente.");
     }
   };
 
   return (
+    <ScrollView style={globalStyles.scrollContent} keyboardShouldPersistTaps="handled">{
+
+    
     <View style={globalStyles.container}>
       <View style={globalStyles.scrollContent}>
         <Text style={globalStyles.title}>FORMULÁRIO</Text>
 
-        {/* Nome Completo */}
+        {/* Nome */}
         <View style={globalStyles.inputContainer}>
           <TextInput
             style={[globalStyles.input, nomeError && globalStyles.inputError]}
@@ -157,7 +160,7 @@ export default function Formulario() {
         <View style={globalStyles.inputContainer}>
           <TextInput
             style={[globalStyles.input, dataError && globalStyles.inputError]}
-            placeholder="Data de Nascimento"
+            placeholder="Data de Nascimento (DD/MM/AAAA)"
             value={data}
             onChangeText={setData}
           />
@@ -179,7 +182,7 @@ export default function Formulario() {
         <View style={globalStyles.inputContainer}>
           <TextInput
             style={[globalStyles.input, telefoneFixoError && globalStyles.inputError]}
-            placeholder="Telefone Fixo"
+            placeholder="Telefone Fixo (XX XXXX-XXXX)"
             value={telefoneFixo}
             onChangeText={setTelefoneFixo}
           />
@@ -190,7 +193,7 @@ export default function Formulario() {
         <View style={globalStyles.inputContainer}>
           <TextInput
             style={[globalStyles.input, celularError && globalStyles.inputError]}
-            placeholder="Celular"
+            placeholder="Celular (XX 9XXXX-XXXX)"
             value={celular}
             onChangeText={setCelular}
           />
@@ -232,21 +235,20 @@ export default function Formulario() {
           {confirmarSenhaError ? <Text style={globalStyles.errorText}>{confirmarSenhaError}</Text> : null}
         </View>
 
-        {/* Nome do Pai (somente para menores de idade) */}
+        {/* Campos para menores de idade */}
         {isMenorDeIdade && (
           <>
             <View style={globalStyles.inputContainer}>
               <TextInput
-                style={[globalStyles.input]}
+                style={globalStyles.input}
                 placeholder="Nome do Pai"
                 value={nomePai}
                 onChangeText={setNomePai}
               />
             </View>
-
             <View style={globalStyles.inputContainer}>
               <TextInput
-                style={[globalStyles.input]}
+                style={globalStyles.input}
                 placeholder="Nome da Mãe"
                 value={nomeMae}
                 onChangeText={setNomeMae}
@@ -255,11 +257,12 @@ export default function Formulario() {
           </>
         )}
 
-        {/* Botão de Envio */}
+        {/* Botão de envio */}
         <TouchableOpacity style={globalStyles.button} onPress={handleSubmit}>
           <Text style={globalStyles.buttonText}>Enviar</Text>
         </TouchableOpacity>
       </View>
     </View>
+    }</ScrollView>
   );
 }
