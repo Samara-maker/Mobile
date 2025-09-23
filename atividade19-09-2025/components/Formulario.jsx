@@ -160,7 +160,7 @@ export default function Formulario() {
         <View style={globalStyles.inputContainer}>
           <TextInput
             style={[globalStyles.input, dataError && globalStyles.inputError]}
-            placeholder="Data de Nascimento (DD/MM/AAAA)"
+            placeholder="Data de Nascimento"
             value={data}
             onChangeText={setData}
           />
@@ -182,7 +182,7 @@ export default function Formulario() {
         <View style={globalStyles.inputContainer}>
           <TextInput
             style={[globalStyles.input, telefoneFixoError && globalStyles.inputError]}
-            placeholder="Telefone Fixo (XX XXXX-XXXX)"
+            placeholder="Telefone Fixo"
             value={telefoneFixo}
             onChangeText={setTelefoneFixo}
           />
@@ -193,7 +193,7 @@ export default function Formulario() {
         <View style={globalStyles.inputContainer}>
           <TextInput
             style={[globalStyles.input, celularError && globalStyles.inputError]}
-            placeholder="Celular (XX 9XXXX-XXXX)"
+            placeholder="Celular"
             value={celular}
             onChangeText={setCelular}
           />
