@@ -115,7 +115,7 @@ export default function Formulario() {
       isValid = false;
     } else setEmailError('');
 
-    // Senha
+    // SENHA
     const senhaRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
     if (!senhaRegex.test(senha)) {
       setSenhaError("Senha deve ter no mínimo 8 caracteres, incluindo letras maiúsculas, minúsculas, números e caracteres especiais.");
