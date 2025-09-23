@@ -155,9 +155,10 @@ export default function Formulario() {
   };
 
   return (
+
+    //TUDO QUE ESTÁ NO SCROLLVIEW, O FORMULAIO ROLA COM O MOUSE
     <ScrollView style={globalStyles.scrollContent} keyboardShouldPersistTaps="handled">{
 
-    
     <View style={globalStyles.container}>
       <View style={globalStyles.scrollContent}>
         <Text style={globalStyles.title}>FORMULÁRIO</Text>
