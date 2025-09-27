@@ -66,7 +66,7 @@ export default function Formulario() {
   const validateForm = () => {
     let isValid = true;
 
-    // NOME COMPLLETO, CONFERE SE TEM PELO MENOS DUAS PALAVRAS
+    // NOME COMPLETO, CONFERE SE TEM PELO MENOS DUAS PALAVRAS
 
     if (!nome.trim() || nome.split(' ').length < 2) {
       setNomeError("Nome completo é obrigatório e deve conter pelo menos dois nomes.");
