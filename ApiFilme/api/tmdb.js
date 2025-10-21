@@ -1,25 +1,39 @@
+// src/api/tmdb.js
 import axios from 'axios';
 
-import { TMDB_API_KEY } from '@env';
+const API_KEY = '26cd1e145ab15dbc95b5fc941e2a4967'; // sua API key
 
 const api = axios.create({
   baseURL: 'https://api.themoviedb.org/3',
 });
 
-export const imageUrl = (path) => `https://image.tmdb.org/t/p/w500${path}`;
-
+// 🔹 Buscar filmes
 export const searchMovies = async (query) => {
   try {
     const response = await api.get('/search/movie', {
       params: {
-        api_key: TMDB_API_KEY,
+        api_key: API_KEY,
         language: 'pt-BR',
-        query,
+        query: query,
       },
     });
     return response.data.results;
   } catch (error) {
     console.error('Erro ao buscar filmes:', error);
-    return [];
+  }
+};
+
+// 🔹 Buscar detalhes de um filme específico
+export const getMovieDetails = async (movieId) => {
+  try {
+    const response = await api.get(`/movie/${movieId}`, {
+      params: {
+        api_key: API_KEY,
+        language: 'pt-BR',
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Erro ao buscar detalhes do filme:', error);
   }
 };
