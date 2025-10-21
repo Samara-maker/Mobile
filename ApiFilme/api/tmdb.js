@@ -1,13 +1,12 @@
-// src/api/tmdb.js
 import axios from 'axios';
 
-const API_KEY = '26cd1e145ab15dbc95b5fc941e2a4967'; // sua API key
+const API_KEY = '26cd1e145ab15dbc95b5fc941e2a4967'; 
 
 const api = axios.create({
   baseURL: 'https://api.themoviedb.org/3',
 });
 
-// 🔹 Buscar filmes
+// Buscar filmes
 export const searchMovies = async (query) => {
   try {
     const response = await api.get('/search/movie', {
@@ -23,7 +22,7 @@ export const searchMovies = async (query) => {
   }
 };
 
-// 🔹 Buscar detalhes de um filme específico
+// Buscar detalhes de um filme específico
 export const getMovieDetails = async (movieId) => {
   try {
     const response = await api.get(`/movie/${movieId}`, {
