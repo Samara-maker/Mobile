@@ -114,7 +114,7 @@ export const updateItem = async (id, name, token) => {
  */
 export const deleteItem = async (id, token) => {
     console.log(`Deletando item com ID: ${id}`);
-    const response = await jiraia.delete(`/items/${id}`, {
+    const response = await api.delete(`/items/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
     });
     console.log("Item deletado:", response.data);

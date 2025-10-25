@@ -21,7 +21,7 @@ export default function LoginScreen({ navigation }) {
     const handleLogin = async () => {
         console.log("Iniciando o processo de login...");
         try {
-            const data = await login(usuario, senha);
+            const data = await login(username, password);
             console.log("Login bem-sucedido:", data);
             Alert.alert("Login bem-sucedido!");
             navigation.navigate("Home", { token: data.token });
