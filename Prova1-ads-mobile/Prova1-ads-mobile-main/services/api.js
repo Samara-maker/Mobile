@@ -2,7 +2,7 @@
 
 import axios from "axios";
 
-const API_BASE_URL = "http://localhost:3000"; // Ajuste para o IP correto no dispositivo real
+const API_BASE_URL = "http://localhost:4000"; // Ajuste para o IP correto no dispositivo real
 
 // Cria uma instância do Axios com a URL base configurada
 const api = axios.create({

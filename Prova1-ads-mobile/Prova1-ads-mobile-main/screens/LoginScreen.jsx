@@ -1,110 +1,62 @@
-// HomeScreen.jsx
-import React, { useState, useEffect, useCallback } from "react";
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from "react-native";
-import ItemList from "../components/ItemList";
-import { getItems, createItem, updateItem, deleteItem } from "../services/api";
+// LoginScreen.jsx
+
+import React, { useState } from "react";
+import { View, Text, TextInput, TouchableOpacity, Alert, StyleSheet } from "react-native";
+import { login } from "../services/api";
 
 /**
- * Componente principal que exibe a lista de itens e permite operações de CRUD.
+ * Tela de Login do aplicativo.
  *
- * @component
- * @param {Object} props - Propriedades do componente.
- * @param {Object} props.route - Objeto de rota contendo parâmetros.
- * @param {Object} props.navigation - Objeto de navegação para transição entre telas.
- * @returns {JSX.Element}
+ * @param {object} props - Propriedades do componente.
+ * @param {object} props.navigation - Navegação do React Navigation.
+ * @returns {JSX.Element} Componente de tela de login.
  */
-export default function HomeScreen({ route, navigation }) {
-    console.log("Renderizando HomeScreen");
-    const { token } = route.params;
-    const [items, setItems] = useState([]);
-    const [newItemName, setNewItemName] = useState("");
-    const [editingItem, setEditingItem] = useState(null);
+export default function LoginScreen({ navigation }) {
+    const [username, setUsername] = useState("");
+    const [password, setPassword] = useState("");
 
-    useEffect(() => {
-        //return null;
-        const fetchItems = async () => {
-            try {
-                const data = await getItems(token);
-                setItems(data);
-            } catch (error) {
-                console.error("Erro ao carregar itens:", error);
-                Alert.alert("Erro", "Não foi possível carregar os itens.");
-            }
-        };
-        fetchItems().then(r => r);
-    }, [token]);
-
-    const handleCreateItem = useCallback(async () => {
-        if (!newItemName.trim()) {
-            Alert.alert("Atenção", "O nome do item não pode ser vazio.");
-            return;
-        }
+    /**
+     * Manipula o processo de login do usuário.
+     */
+    const handleLogin = async () => {
+        console.log("Iniciando o processo de login...");
         try {
-            const newItem = await createItem(newItemName.trim(), token);
-            setItems((prev) => [...prev, newItem]);
-            setNewItemName("");
+            const data = await login(usuario, senha);
+            console.log("Login bem-sucedido:", data);
+            Alert.alert("Login bem-sucedido!");
+            navigation.navigate("Home", { token: data.token });
         } catch (error) {
-            console.error("Erro ao criar item:", error);
-            Alert.alert("Erro", "Não foi possível criar o item.");
+            console.error("Erro ao fazer login:", error.response?.data?.error || "Erro desconhecido");
+            Alert.alert("Erro ao fazer login", error.response?.data?.error || "Erro desconhecido");
         }
-    }, [newItemName, token]);
-
-    const handleUpdateItem = useCallback(async () => {
-        if (!editingItem || !newItemName.trim()) {
-            Alert.alert("Atenção", "O nome do item não pode ser vazio.");
-            return;
-        }
-        try {
-            const updatedItem = await updateItem(editingItem.id, newItemName.trim(), token);
-            setItems((prev) =>
-                prev.map((item) => (item.id === updatedItem.id ? updatedItem : item))
-            );
-            setEditingItem(null);
-            setNewItemName("");
-        } catch (error) {
-            console.error("Erro ao atualizar item:", error);
-            Alert.alert("Erro", "Não foi possível atualizar o item.");
-        }
-    }, [editingItem, newItemName, token]);
-
-    const handleDeleteItem = useCallback(async (id) => {
-        try {
-            await deleteItem(id, token);
-            setItems((prev) => prev.filter((item) => item.id !== id));
-        } catch (error) {
-            console.error("Erro ao excluir item:", error);
-            Alert.alert("Erro", "Não foi possível excluir o item.");
-        }
-    }, [token]);
-
-    const handleEditItem = (item) => {
-        setEditingItem(item);
-        setNewItemName(item.name);
     };
 
     return (
         <View style={styles.container}>
-            <Text style={styles.title}>Lista de Itens</Text>
-            <ItemList items={items} onEdit={handleEditItem} onDelete={handleDeleteItem} />
+            <Text style={styles.title}>Login</Text>
             <TextInput
                 style={styles.input}
-                placeholder="Nome do item"
-                value={newItemName}
-                onChangeText={setNewItemName}
+                placeholder="Nome de usuário"
+                value={username}
+                onChangeText={setUsername}
+                autoCapitalize="none"
+                autoCorrect={false}
+                keyboardType="email-address"
+                textContentType="username"
             />
-            <TouchableOpacity
-                style={styles.button}
-                onPress={editingItem ? handleUpdateItem : handleCreateItem}
-            >
-                <Text style={styles.buttonText}>
-                    {editingItem ? "Atualizar Item" : "Criar Item"}
-                </Text>
+            <TextInput
+                style={styles.input}
+                placeholder="Senha"
+                secureTextEntry
+                value={password}
+                onChangeText={setPassword}
+                textContentType="password"
+            />
+            <TouchableOpacity style={styles.button} onPress={handleLogin}>
+                <Text style={styles.buttonText}>Entrar</Text>
             </TouchableOpacity>
-            <TouchableOpacity
-                style={[styles.button, styles.logoutButton]}
-                onPress={() => navigation.navigate("Login")}
-            >
-                <Text style={styles.buttonText}>Sair</Text>
+            <TouchableOpacity style={[styles.button, styles.registerButton]} onPress={() => navigation.navigate("Register")}>
+                <Text style={styles.buttonText}>Registrar</Text>
             </TouchableOpacity>
         </View>
     );
@@ -113,14 +65,16 @@ export default function HomeScreen({ route, navigation }) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        justifyContent: "center",
         padding: 20,
         backgroundColor: "#F5F5F5",
     },
     title: {
-        fontSize: 24,
+        fontSize: 28,
         fontWeight: "bold",
-        marginBottom: 20,
         color: "#333",
+        textAlign: "center",
+        marginBottom: 30,
     },
     input: {
         height: 50,
@@ -128,22 +82,23 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderRadius: 8,
         paddingHorizontal: 15,
-        backgroundColor: "#FFF",
         marginBottom: 15,
+        backgroundColor: "#FFF",
     },
     button: {
+        height: 50,
         backgroundColor: "#6200EE",
-        paddingVertical: 15,
-        borderRadius: 8,
+        justifyContent: "center",
         alignItems: "center",
+        borderRadius: 8,
         marginBottom: 10,
+    },
+    registerButton: {
+        backgroundColor: "#03DAC6",
     },
     buttonText: {
         color: "#FFF",
         fontSize: 16,
         fontWeight: "bold",
-    },
-    logoutButton: {
-        backgroundColor: "#B00020",
     },
 });
