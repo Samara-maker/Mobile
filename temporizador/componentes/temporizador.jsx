@@ -88,6 +88,14 @@ export default function Temporizador() {
 
   return (
     <View style={styles.container}>
+      
+      <TextInput
+        style={styles.input}
+        value={initialMinutes}
+        onChangeText={handleMinutesChange}
+        placeholder="Minutos (ex.: 25)"
+        keyboardType="numeric"
+      />
       <View
         style={[styles.displayContainer, isUrgent && styles.displayContainerUrgent]}
       >
@@ -109,14 +117,6 @@ export default function Temporizador() {
           <Text style={styles.buttonText}>Resetar</Text>
         </TouchableOpacity>
       </View>
-
-      <TextInput
-        style={styles.input}
-        value={initialMinutes}
-        onChangeText={handleMinutesChange}
-        placeholder="Minutos (ex.: 25)"
-        keyboardType="numeric"
-      />
 
       <View style={styles.statsBox}>
         <Text style={styles.statsText}>Sessões completas: {sessoesCompletas}</Text>
